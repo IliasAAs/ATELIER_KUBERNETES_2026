@@ -2,8 +2,8 @@
 
 > Complétez ce fichier au fil de l'atelier, puis faites un commit et un push (voir la section « Rendu » du README).
 
-**Nom / Prénom :**
-**Groupe :**
+**Nom / Prénom :** ASRI Ilias
+**Groupe :** RS
 
 ---
 
@@ -39,7 +39,12 @@
 
 9. Sur quels nœuds se trouvent vos 3 réplicas ? Collez la sortie de `kubectl get pods -l app=site -o wide`.
    ```
-   (à compléter avec la sortie réelle de votre cluster)
+   NAME                    READY   STATUS    RESTARTS   AGE    IP          NODE               NOMINATED NODE   READINESS GATES
+   site-54b5858c4c-d9nrd   1/1     Running   0          6s     10.42.0.6   k3d-lab-agent-0    <none>           <none>
+   site-54b5858c4c-w4x6n   1/1     Running   0          2m9s   10.42.2.6   k3d-lab-server-0   <none>           <none>
+   site-54b5858c4c-xwf4g   1/1     Running   0          6s     10.42.1.8   k3d-lab-agent-1    <none>           <none>
+
+   Les 3 réplicas sont répartis sur les 3 nœuds du cluster (1 pod par nœud) : le scheduler a placé un pod sur chacun, y compris sur le control-plane, qui accepte les applications dans k3s.
    ```
 10. Avec l'image `nginx:9.99`, quel statut avait le pod ? Quelle commande vous a donné la cause ?
     > Le nouveau pod était en `ErrImagePull` puis `ImagePullBackOff` : l'image `nginx:9.99` n'existe pas. La cause exacte est donnée par `kubectl describe pod -l app=site`, section *Events* (échec du pull : `manifest for nginx:9.99 not found`).
@@ -49,15 +54,15 @@
 ## Exercice 6 — Portainer & Mario
 
 12. URL publique de votre Mario :
-    > (à compléter : URL du port 8585 de votre Codespace, rendu public)
+    > https://jubilant-space-engine-7vpwpj5p5v952vg9-8585.app.github.dev/
 13. Retrouvez le Deployment `mario` en ligne de commande. Portainer et `kubectl` parlent-ils au même composant ? Lequel ?
     > Oui : `kubectl get deploy mario` retrouve le Deployment créé depuis Portainer. Les deux outils sont des clients de la même **API Server** Kubernetes (sur le nœud control-plane) : `kubectl` s'y connecte avec le kubeconfig, Portainer avec le ServiceAccount du pod qui tourne dans le cluster. L'état est le même, quel que soit l'outil.
 
 ## Bonus (facultatif)
 
 14. Bonus réalisés et remarques :
-    > (à compléter)
+    > Aucun bonus réalisé.
 
 ---
 
-**Score obtenu avec `./scripts/check.sh` :** ... / ...
+**Score obtenu avec `./scripts/check.sh` :** 15 / 18
