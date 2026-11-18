@@ -61,8 +61,8 @@
 ## Bonus (facultatif)
 
 14. Bonus réalisés et remarques :
-    > Aucun bonus réalisé.
+    > A (Ingress Traefik, site accessible sur le port 8081) et B (readinessProbe HTTP sur / et requests/limits CPU et mémoire) réalisés.
 
 ---
 
-**Score obtenu avec `./scripts/check.sh` :** 15 / 18
+**Score obtenu avec `./scripts/check.sh` :** 18 / 18
