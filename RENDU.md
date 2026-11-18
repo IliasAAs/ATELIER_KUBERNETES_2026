@@ -10,7 +10,7 @@
 ## Exercice 1 — Cluster
 
 1. Combien de nœuds affiche `kubectl get nodes` ? Quel est le rôle de chacun ?
-   > 3 nœuds : `k3d-lab-server-0` (rôle `control-plane`, le « master » : API Server, scheduler, etcd/stockage de l'état du cluster, contrôleurs) et `k3d-lab-agent-0` / `k3d-lab-agent-1` (workers : ils exécutent les pods des applications).
+   > 3 nœuds : `k3d-lab-server-0` (rôle `control-plane`, le « master » : API Server, scheduler, stockage de l'état du cluster, contrôleurs) et `k3d-lab-agent-0` / `k3d-lab-agent-1` (workers : ils exécutent les pods des applications).
 2. Que montre `docker ps` ? Qu'est-ce qu'un « nœud » dans k3d, concrètement ?
    > `docker ps` liste des conteneurs Docker : un par nœud (`k3d-lab-server-0`, `k3d-lab-agent-0`, `k3d-lab-agent-1`, image `rancher/k3s`) plus un conteneur load balancer (`k3d-lab-serverlb`) qui relie le port 8081 du Codespace au port 80 du cluster. Un « nœud » k3d est donc un conteneur Docker qui fait tourner k3s (Kubernetes léger) : les pods tournent dans des conteneurs à l'intérieur de ces conteneurs-nœuds.
 
@@ -43,11 +43,10 @@
    site-54b5858c4c-d9nrd   1/1     Running   0          6s     10.42.0.6   k3d-lab-agent-0    <none>           <none>
    site-54b5858c4c-w4x6n   1/1     Running   0          2m9s   10.42.2.6   k3d-lab-server-0   <none>           <none>
    site-54b5858c4c-xwf4g   1/1     Running   0          6s     10.42.1.8   k3d-lab-agent-1    <none>           <none>
-
-   Les 3 réplicas sont répartis sur les 3 nœuds du cluster (1 pod par nœud) : le scheduler a placé un pod sur chacun, y compris sur le control-plane, qui accepte les applications dans k3s.
    ```
+   Les 3 réplicas sont répartis sur les 3 nœuds du cluster (1 pod par nœud) : le scheduler a placé un pod sur chacun, y compris sur le control-plane, qui accepte les applications dans k3s.
 10. Avec l'image `nginx:9.99`, quel statut avait le pod ? Quelle commande vous a donné la cause ?
-    > Le nouveau pod était en `ErrImagePull` puis `ImagePullBackOff` : l'image `nginx:9.99` n'existe pas. La cause exacte est donnée par `kubectl describe pod -l app=site`, section *Events* (échec du pull : `manifest for nginx:9.99 not found`).
+    > Le nouveau pod était en `ErrImagePull` puis `ImagePullBackOff` : l'image `nginx:9.99` n'existe pas. La cause exacte est donnée par `kubectl describe pod -l app=site`, section *Events* (échec du pull de l'image `nginx:9.99`, qui n'existe pas).
 11. Pendant la panne, le site restait-il accessible ? Pourquoi ?
     > Oui. Le Deployment fait un *rolling update* : il ne retire les anciens pods qu'au fur et à mesure que les nouveaux passent `Ready`. Le nouveau pod ne devenant jamais prêt, les anciens pods (version précédente) ont continué à servir le trafic, sans coupure ; `kubectl rollout undo` a ensuite restauré la révision précédente.
 
